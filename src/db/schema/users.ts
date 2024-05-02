@@ -1,4 +1,3 @@
-import { sql } from "drizzle-orm";
 import {
 	integer,
 	sqliteTable,
@@ -13,6 +12,7 @@ export const users = sqliteTable("user", {
 	email: text("email").notNull(),
 	emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
 	image: text("image"),
+	password: text("password"),
 });
 
 export const accounts = sqliteTable(
