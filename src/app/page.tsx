@@ -38,8 +38,8 @@ export default function Home() {
 						{getSvgIcon}
 						Pokedéx
 					</div>
-					<Button variant='ghost' size='icon' className='rounded-full'>
-						<AArrowDown />
+					<Button variant='ghost' size='icon' className='rounded-full hover:[color:red]'>
+						<Plus />
 					</Button>
 				</div>
 				<div className='flex flex-row gap-2 items-center justify-center'>
@@ -55,8 +55,12 @@ export default function Home() {
 					/>
 					<Popover>
 						<PopoverTrigger asChild>
-							<Button variant='outline' size='icon' className='rounded-full rotate-270 rotate-90'>
-								<BarChart color='red' />
+							<Button
+								variant='outline'
+								size='icon'
+								className='rounded-full [color:red] hover:[color:red]'
+							>
+								{sortBy === 'alphabetically' ? <AArrowDown /> : '#'}
 							</Button>
 						</PopoverTrigger>
 						<PopoverContent>
