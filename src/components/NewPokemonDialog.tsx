@@ -219,7 +219,7 @@ export function NewPokemonDialog({ trigger }: { trigger: ReactNode }) {
 										onClick={form.handleSubmit(onSubmit)}
 										disabled={isPending || !session.data}
 									>
-										{isPending ? <Loader2 className='animate-spin' /> : 'Create'}
+										{isPending ? <Loader2 className='animate-spin' /> : !session.data ? 'Create ⓘ' : 'Create'}
 									</Button>
 								</span>
 							</TooltipTrigger>

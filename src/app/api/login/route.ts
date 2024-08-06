@@ -3,10 +3,10 @@ import * as bcrypt from 'bcrypt';
 import { signJwtAccessToken } from '@/lib/jwt';
 import { db } from '@/db';
 import { users } from '@/db/schema/users';
-import { sql } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 
 interface RequestBody {
-	username: string;
+	email: string;
 	password: string;
 }
 
@@ -23,17 +23,11 @@ export async function POST(request: Request) {
 			password: users.password,
 		})
 		.from(users)
-		.where(sql`${users.email} = ${body.username}`);
+		.where(eq(users.email, body.email));
 
 	if (user && user.password && (await bcrypt.compare(body.password, user.password))) {
 		const { password, ...userWithoutPass } = user;
-		const accessToken = signJwtAccessToken(userWithoutPass);
-		const result = {
-			...userWithoutPass,
-			accessToken,
-		};
-
-		return new Response(JSON.stringify(result));
+		return new Response(JSON.stringify(userWithoutPass));
 	} else {
 		return new Response(JSON.stringify(null));
 	}
