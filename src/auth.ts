@@ -1,13 +1,19 @@
-import NextAuth, { NextAuthConfig } from 'next-auth';
-// import GitHubProvider from "next-auth/providers/GitHub";
+import NextAuth, { NextAuthConfig, User } from 'next-auth';
 import DiscordProvider from 'next-auth/providers/discord';
 import GoogleProvider from 'next-auth/providers/google';
+import GitHubProvider from 'next-auth/providers/github';
+import CredentialsProvider from 'next-auth/providers/credentials';
 import { DrizzleAdapter } from '@auth/drizzle-adapter';
 import { db } from '@/db';
 
+export const BASE_PATH = '/api/auth';
+
 export const authConfig = {
 	providers: [
-		// GitHub,
+		GitHubProvider({
+			clientId: process.env.AUTH_GITHUB_ID!,
+			clientSecret: process.env.AUTH_GITHUB_SECRET!,
+		}),
 		DiscordProvider({
 			clientId: process.env.DISCORD_CLIENT_ID!,
 			clientSecret: process.env.DISCORD_CLIENT_SECRET!,
@@ -16,14 +22,49 @@ export const authConfig = {
 			clientId: process.env.GOOGLE_CLIENT_ID,
 			clientSecret: process.env.GOOGLE_CLIENT_SECRET,
 		}),
+		CredentialsProvider({
+			name: 'Credentials',
+			credentials: {
+				email: {
+					label: 'Email',
+					type: 'text',
+					placeholder: 'Your email',
+				},
+				password: {
+					label: 'Password',
+					type: 'password',
+					placeholder: 'Your password',
+				},
+			},
+			async authorize(credentials): Promise<User | null> {
+				const res = await fetch(`${process.env.NEXTAUTH_URL!}/api/login`, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						email: credentials?.email,
+						password: credentials?.password,
+					}),
+				});
+
+				return await res.json();
+			},
+		}),
 	],
 	adapter: DrizzleAdapter(db),
 	callbacks: {
-		async session({ session, user }) {
-			session.user.id = user.id;
+		async session({ session, token }) {
+			if (token.sub && session.user) {
+				session.user.id = token.sub;
+			}
 			return session;
 		},
+		async jwt({ token }) {
+			return token;
+		},
 	},
+	session: { strategy: 'jwt' },
 } satisfies NextAuthConfig;
 
-export const { handlers, auth, signOut } = NextAuth(authConfig);
+export const { handlers, auth, signOut, signIn } = NextAuth(authConfig);

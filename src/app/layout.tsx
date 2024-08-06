@@ -5,6 +5,7 @@ import RootProviders from '@/components/providers/RootProvider';
 import { Toaster } from '@/components/ui/sonner';
 import { SessionProvider } from 'next-auth/react';
 import { auth, BASE_PATH } from '@/auth';
+import Header from '@/components/ui/header';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -19,7 +20,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 		<html lang='en'>
 			<body className={inter.className}>
 				<SessionProvider basePath={BASE_PATH} session={session}>
-					<RootProviders>{children}</RootProviders>
+					<RootProviders>
+						<Header />
+						{children}
+					</RootProviders>
 				</SessionProvider>
 				<Toaster richColors position='bottom-right' />
 			</body>
