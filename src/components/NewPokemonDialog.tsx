@@ -11,7 +11,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@/components/ui/dialog';
-import React, { ReactNode, useCallback, useState } from 'react';
+import React, { ReactNode, useCallback, useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -31,8 +31,29 @@ export function NewPokemonDialog({ trigger }: { trigger: ReactNode }) {
 	const session = useSession();
 
 	const [open, setOpen] = useState(false);
+
+	const generateRandomStats = () => ({
+		hp: Math.floor(Math.random() * (100 - 15 + 1)) + 20,
+		attack: Math.floor(Math.random() * (100 - 15 + 1)) + 15,
+		defense: Math.floor(Math.random() * (100 - 15 + 1)) + 15,
+		specialAttack: Math.floor(Math.random() * (100 - 15 + 1)) + 15,
+		specialDefense: Math.floor(Math.random() * (100 - 15 + 1)) + 15,
+		speed: Math.floor(Math.random() * (100 - 15 + 1)) + 15,
+	});
+
 	const form = useForm<NewPokemonSchemaType>({
 		resolver: zodResolver(NewPokemonSchema),
+		defaultValues: {
+			pokemonId: 0,
+			givenName: '',
+			hp: 0,
+			attack: 0,
+			defense: 0,
+			'special-attack': 0,
+			'special-defense': 0,
+			speed: 0,
+			captured: false,
+		},
 	});
 
 	const handlePokemonChange = useCallback(
@@ -69,6 +90,23 @@ export function NewPokemonDialog({ trigger }: { trigger: ReactNode }) {
 		},
 		[mutate]
 	);
+
+	useEffect(() => {
+		const randomStats = {
+			hp: Math.floor(Math.random() * (100 - 10 + 1)) + 10,
+			attack: Math.floor(Math.random() * (100 - 15 + 1)) + 15,
+			defense: Math.floor(Math.random() * (100 - 15 + 1)) + 15,
+			'special-attack': Math.floor(Math.random() * (100 - 10 + 1)) + 10,
+			'special-defense': Math.floor(Math.random() * (100 - 15 + 1)) + 15,
+			speed: Math.floor(Math.random() * (100 - 10 + 1)) + 10,
+		};
+
+		form.reset((values) => ({
+			...values,
+			...randomStats,
+		}));
+	}, [form]);
+
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
@@ -114,7 +152,7 @@ export function NewPokemonDialog({ trigger }: { trigger: ReactNode }) {
 									<FormItem>
 										<FormLabel>HP</FormLabel>
 										<FormControl>
-											<Input defaultValue={''} {...field} />
+											<Input  {...field} />
 										</FormControl>
 									</FormItem>
 								)}
@@ -126,7 +164,7 @@ export function NewPokemonDialog({ trigger }: { trigger: ReactNode }) {
 									<FormItem>
 										<FormLabel>ATK</FormLabel>
 										<FormControl>
-											<Input defaultValue={''} {...field} />
+											<Input {...field} />
 										</FormControl>
 									</FormItem>
 								)}
@@ -138,7 +176,7 @@ export function NewPokemonDialog({ trigger }: { trigger: ReactNode }) {
 									<FormItem>
 										<FormLabel>DEF</FormLabel>
 										<FormControl>
-											<Input defaultValue={''} {...field} />
+											<Input  {...field} />
 										</FormControl>
 									</FormItem>
 								)}
@@ -150,7 +188,7 @@ export function NewPokemonDialog({ trigger }: { trigger: ReactNode }) {
 									<FormItem>
 										<FormLabel>SATK</FormLabel>
 										<FormControl>
-											<Input defaultValue={''} {...field} />
+										<Input {...field} />
 										</FormControl>
 									</FormItem>
 								)}
@@ -162,7 +200,7 @@ export function NewPokemonDialog({ trigger }: { trigger: ReactNode }) {
 									<FormItem>
 										<FormLabel>SDEF</FormLabel>
 										<FormControl>
-											<Input defaultValue={''} {...field} />
+											<Input {...field} />
 										</FormControl>
 									</FormItem>
 								)}
@@ -174,7 +212,7 @@ export function NewPokemonDialog({ trigger }: { trigger: ReactNode }) {
 									<FormItem>
 										<FormLabel>SPD</FormLabel>
 										<FormControl>
-											<Input defaultValue={''} {...field} />
+											<Input {...field} />
 										</FormControl>
 									</FormItem>
 								)}
