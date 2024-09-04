@@ -17,3 +17,12 @@ Indíces criados no email e nome do usuário para otimizar busca ao fazer login
 Fizemos uma integração com a pokeapi, pegando todos os dados dos pokemons
 ![image](https://github.com/user-attachments/assets/ae615333-0af8-4d10-833b-5e00a75bd09b)
 
+# 1 ponto: Local Storage
+Utilizamos local storage para salvar o tema (escuro/claro)
+![image](https://github.com/user-attachments/assets/e159a6f6-0d3f-441c-b1ff-445d2f5d2dde)
+
+# 3 pontos: criar pelo menos um teste automatizado e antecipar a integração/entrega continua  (Continuous Integration e Continous Delivery)
+Deploy do projeto feito dia 9 de maio, com continuos integration e continuos delivery.
+![image](https://github.com/user-attachments/assets/6e9fca0b-017e-428e-8082-890e4e4de6ab)
+
+Link do site: https://pokedex-webproject.vercel.app/
