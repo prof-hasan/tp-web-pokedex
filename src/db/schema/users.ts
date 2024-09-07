@@ -1,4 +1,4 @@
-import { integer, sqliteTable, text, primaryKey } from 'drizzle-orm/sqlite-core';
+import { integer, sqliteTable, text, primaryKey, uniqueIndex, index } from 'drizzle-orm/sqlite-core';
 import type { AdapterAccount } from '@auth/core/adapters';
 import { createId } from '@paralleldrive/cuid2';
 
@@ -12,6 +12,11 @@ export const users = sqliteTable('user', {
 	emailVerified: integer('emailVerified', { mode: 'timestamp_ms' }),
 	image: text('image'),
 	password: text('password'),
+}, (table) => {
+	return {
+	  nameIdx: index("name_idx").on(table.name),
+	  emailIdx: uniqueIndex("email_idx").on(table.email),
+	};
 });
 
 export const accounts = sqliteTable(
